@@ -4,6 +4,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import AppLayout from "./ui/AppLayout";
+import GlobalStyles from "./styles/GlobalStyles.jsx";
 
 const createLazyRoute = (importFn) => {
   return {
@@ -58,5 +59,10 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <GlobalStyles />
+      <RouterProvider router={router} />
+    </>
+  );
 }
