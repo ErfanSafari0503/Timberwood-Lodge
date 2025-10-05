@@ -5,6 +5,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 import reactX from "eslint-plugin-react-x";
 import reactDom from "eslint-plugin-react-dom";
+import pluginQuery from "@tanstack/eslint-plugin-query";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
@@ -18,6 +19,7 @@ export default defineConfig([
       reactX.configs["recommended-typescript"],
       reactDom.configs.recommended,
       reactHooks.configs["recommended-latest"],
+      pluginQuery.configs["flat/recommended"],
       reactRefresh.configs.vite,
     ],
     languageOptions: {
