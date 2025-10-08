@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import { createLazyRoute } from "./utils/createLazyRoute";
 import AppLayout from "./ui/AppLayout";
+import GlobalStyles from "./styles/GlobalStyles.ts";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
+      <GlobalStyles />
       <RouterProvider router={router} />
     </>
   );
