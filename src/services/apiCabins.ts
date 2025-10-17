@@ -11,5 +11,14 @@ export async function getCabins(): Promise<cabinType[]> {
     throw new Error("Cabins could not be loaded!");
   }
 
-  return (data ?? []) as Cabin[];
+  return data as cabinType[];
+}
+
+export async function deleteCabin(id: number) {
+  const { error } = await supabase.from("cabins").delete().eq("id", id);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Cabins could not be deleted!");
+  }
 }
