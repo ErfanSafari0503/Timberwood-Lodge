@@ -1,9 +1,9 @@
 import supabase from "./supabase";
 import type { Database } from "../types/supabaseTypes";
 
-type Cabin = Database["public"]["Tables"]["cabins"]["Row"];
+type cabinType = Database["public"]["Tables"]["cabins"]["Row"];
 
-export async function getCabins(): Promise<Cabin[]> {
+export async function getCabins(): Promise<cabinType[]> {
   const { data, error } = await supabase.from("cabins").select("*");
 
   if (error) {
