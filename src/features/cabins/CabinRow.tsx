@@ -3,6 +3,7 @@ import type { Database } from "../../types/supabaseTypes";
 import styled from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCabin } from "../../services/apiCabins";
+import toast from "react-hot-toast";
 
 const TableRow = styled.div`
   display: grid;
@@ -61,6 +62,10 @@ function CabinRow({ cabin }: CabinProps) {
       await queryClient.invalidateQueries({
         queryKey: ["cabins"],
       });
+      toast.success("Cabin successfully deleted!");
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
