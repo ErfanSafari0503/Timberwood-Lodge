@@ -20,17 +20,39 @@ interface newCabinType {
   regularPrice: number;
   discount: number;
   description: string;
+  image: File;
 }
 
 export async function createCabin(newCabin: newCabinType) {
+  const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll("/", "")
+  const imagePath = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/cabin-images/${imageName}`
+
   const { data, error } = await supabase
-    .from("cabins")
-    .insert([newCabin])
+    .from('cabins')
+    .insert([{...newCabin, image: imagePath}])
     .select();
 
   if (error) {
     console.error(error);
     throw new Error("Cabins could not be created!");
+  }
+
+  if (!data || data.length === 0) {
+    throw new Error("Cabin creation failed: no data returned");
+  }
+
+  const createdCabin = data[0] as cabinType;
+
+  const { error: storageError } = await supabase
+    .storage
+    .from('cabin-images')
+    .upload(imageName, newCabin.image)
+
+  if(storageError) {
+    await supabase.from("cabins").delete().eq("id", createdCabin.id);
+    
+    console.error(storageError);
+    throw new Error("Image could not be uploaded and the cabin was not created!");
   }
 
   return data as cabinType[];

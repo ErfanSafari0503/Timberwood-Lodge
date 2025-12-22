@@ -55,7 +55,9 @@ function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
   });
 
   function onSubmit(data: FormData) {
-    mutate(data);
+    const imageFile = data.image?.[0];
+
+    mutate({...data, image: imageFile });
   }
 
   //   function onError(errors) {
