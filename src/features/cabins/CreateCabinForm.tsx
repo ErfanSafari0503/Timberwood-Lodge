@@ -8,6 +8,13 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import FormRow from "../../ui/FormRow";
+import type { Database } from "../../types/supabaseTypes";
+
+type cabinType = Database["public"]["Tables"]["cabins"]["Row"];
+
+interface CreateCabinFormProps {
+  cabinToEdit?: cabinType; 
+}
 
 interface FormData {
   name: string;
@@ -15,16 +22,21 @@ interface FormData {
   regularPrice: number;
   discount: number;
   description: string;
+  image: FileList;
 }
 
-function CreateCabinForm() {
+function CreateCabinForm({ cabinToEdit }: CreateCabinFormProps) {
+  const {id: editId, ...editValue} = cabinToEdit ?? {};
+
+  const isEditSession = Boolean(editId);
+
   const {
     register,
     handleSubmit,
     reset,
     getValues,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<FormData>({defaultValues: isEditSession ? editValue : {}});
 
   const queryClient = useQueryClient();
 
@@ -51,7 +63,7 @@ function CreateCabinForm() {
   //   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
       <FormRow label="Cabin name" id="name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -130,7 +142,9 @@ function CreateCabinForm() {
       </FormRow>
 
       <FormRow label="Cabin photo" id="image">
-        <FileInput id="image" accept="image/*" disabled={isCreating} />
+        <FileInput id="image" accept="image/*" {...register("image", {
+            required: isEditSession ? false : "Image is required",
+          })} disabled={isCreating} />
       </FormRow>
 
       <FormRow>
@@ -138,7 +152,7 @@ function CreateCabinForm() {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isCreating}>Add Cabin</Button>
+        <Button disabled={isCreating}>{isEditSession ? "Edit cabin" : "Create new Cabin"}</Button>
       </FormRow>
     </Form>
   );
